@@ -48,30 +48,7 @@
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
             <a class="nav-item nav-link" href="{% url 'home' %}">Home</a>
-            {% if user.is_authenticated %}
-
-{#                <a class="nav-item nav-link" href="{% url 'my_profile' %}">Profile</a>#}
-
-{#                <a class="nav-item nav-link" href="{% url 'post-create' %}"#}
-{#                >Create Post</a#}
-{#                >#}
-                <a
-                        class="nav-item nav-link btn btn-danger ml-4 text-light"
-                        href="{% url 'logout' %}"
-                >Logout</a
-                >
-            {% else %}
-                <a
-                        class="nav-item nav-link btn btn-success ml-4 text-light"
-                        href="{% url 'login' %}"
-                >Login</a
-                >
-                <a
-                        class="nav-item nav-link btn btn-info ml-3 text-light"
-                        href="{% url 'registration' %} "
-                >Register</a
-                >
-            {% endif %} {% block searchform %}{% endblock searchform %}
+            <a class="nav-item nav-link" href="{% url 'order' %}">Order</a>
         </div>
     </div>
 </nav>

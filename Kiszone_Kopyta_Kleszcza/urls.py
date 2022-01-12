@@ -1,18 +1,21 @@
-from django.contrib.auth import views as auth_views
 from django.urls import path, include
 from django.contrib import admin
+
+from django.conf import settings
+from django.conf.urls.static import static
+
 from home import views
-
+from home.views import  Order, OrderConfirmation, OrderPayConfirmation
 urlpatterns = [
-    path("registration/", views.registration, name="registration"),
-    path('login/', auth_views.LoginView.as_view(template_name='home/login.html'), name='login'),
     path('', include("django.contrib.auth.urls")),
-
-    path('edit-profile/', views.edit_profile, name='edit_profile'),
-    path('my-profile/', views.my_profile, name='my_profile'),
     path("", views.home, name="home"),
     path('admin/', admin.site.urls),
+    path('order', Order.as_view(), name='order'),
+    path('order-confirmation/<int:pk>', OrderConfirmation.as_view(),
+         name='order-confirmation'),
+    path('payment-confirmation/', OrderPayConfirmation.as_view(),
+         name='payment-confirmation'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
 
-]
