@@ -1,20 +1,34 @@
 import json
-from django.core.mail import send_mail
-from .models import MenuItem, Category, OrderModel
 from django.shortcuts import render, redirect
+from django.core.mail import send_mail
+from home.models import MenuItem, Category, OrderModel
 from django.views import View
-from django.utils.timezone import datetime
 
 
-def home(response):
-    return render(response, "home/home.html", {})
+class home(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, 'home/home.html')
 
 
 class Order(View):
     def get(self, request, *args, **kwargs):
+        # get every item from each category
+        appetizers = MenuItem.objects.filter(
+            category__name__contains='Appetizer')
+        entres = MenuItem.objects.filter(category__name__contains='Entre')
+        desserts = MenuItem.objects.filter(category__name__contains='Dessert')
+        drinks = MenuItem.objects.filter(category__name__contains='Drink')
+
+        # pass into context
+        context = {
+            'appetizers': appetizers,
+            'entres': entres,
+            'desserts': desserts,
+            'drinks': drinks,
+        }
 
         # render the template
-        return render(request, 'home/order.html',{})
+        return render(request, 'home/order.html', context)
 
     def post(self, request, *args, **kwargs):
         name = request.POST.get('name')
@@ -107,28 +121,6 @@ class OrderPayConfirmation(View):
         return render(request, 'home/order_pay_confirmation.html')
 
 
-class Dashboard(View):
-    def get(self, request, *args, **kwargs):
-        # get the current date
-        today = datetime.today()
-        orders = OrderModel.objects.filter(
-            created_on__year=today.year, created_on__month=today.month, created_on__day=today.day)
 
-        # loop through the orders and add the price value
-        total_revenue = 0
-        for order in orders:
-            total_revenue += order.price
-
-        # pass total number of orders and total revenue into template
-        context = {
-            'orders': orders,
-            'total_revenue': total_revenue,
-            'total_orders': len(orders)
-        }
-
-        return render(request, 'restaurant/dashboard.html', context)
-
-    def test_func(self):
-        return self.request.user.groups.filter(name='Staff').exists()
 
 
